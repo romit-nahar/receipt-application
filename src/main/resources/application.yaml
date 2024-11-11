@@ -1,0 +1,11 @@
+server:
+  port: 8082
+
+logging:
+  pattern:
+    console: "%d{yyyy-MM-dd HH:mm:ss} [%thread] %-5level %logger{36} - %msg%n"
+  
+  level:
+    root: INFO
+    com.example.receiptprocessor: INFO
+    org.springframework: INFO
