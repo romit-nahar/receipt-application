@@ -40,24 +40,23 @@ public class ReceiptService {
         Double total = Double.valueOf(receipt.getTotal());
         
         // Apply each rule and sum up points
-        // Rule 1: One point for every alphanumeric character in the retailer name
+        // Rule 1
         totalPoints += ruleEngine.calculateRetailerNamePoints(receipt.getRetailer());
-        // Rule 2: 50 points if the total is a round dollar amount with no cents
+        // Rule 2
         totalPoints += ruleEngine.calculateRoundDollarPoints(total);
-        // Rule 3: 25 points if the total is a multiple of 0.25
+        // Rule 3
         totalPoints += ruleEngine.calculateQuarterMultiplePoints(total);
-        // Rule 4: 5 points for every two items on the receipt
+        // Rule 4
         totalPoints += ruleEngine.calculateItemPairPoints(receipt.getItems());
-        // Rule 5: If the trimmed length of the item description is a multiple of 3, multiply the price by 0.2 and round up to the nearest integer
-        //         The result is the number of points earned
+        // Rule 5
         AtomicInteger itemPoints = new AtomicInteger(0);
         receipt.getItems().forEach(item -> 
             itemPoints.addAndGet(ruleEngine.calculateItemDescriptionPoints(item)));
         totalPoints += itemPoints.get();
 
-        // Rule 6: 6 points if the day in the purchase date is odd
+        // Rule 6
         totalPoints += ruleEngine.calculatePurchaseDatePoints(receipt.getPurchaseDate());
-        // Rule 7: 10 points if the time of purchase is after 2:00pm and before 4:00pm
+        // Rule 7
         totalPoints += ruleEngine.calculatePurchaseTimePoints(receipt.getPurchaseTime());
         
         logger.info("Total points calculated for receipt {}: {}", id, totalPoints);

@@ -5,6 +5,7 @@ import java.util.Map;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -33,10 +34,15 @@ public class ReceiptController {
     }
     
     @GetMapping("/{id}/points")
-    public ResponseEntity<Map<String, Integer>> getPoints(@PathVariable String id) {
+    public ResponseEntity<Map<String, Integer>> getPoints(@PathVariable("id") String id) {
         logger.info("Received request to calculate points for receipt ID: {}", id);
         int points = receiptService.calculatePoints(id);
         logger.info("Calculated {} points for receipt ID: {}", points, id);
         return ResponseEntity.ok(Map.of("points", points));
+    }
+
+    @ExceptionHandler(IllegalArgumentException.class)
+    public ResponseEntity<?> handleIllegalArgumentException(IllegalArgumentException ex) {
+        return ResponseEntity.badRequest().body(Map.of("error", ex.getMessage()));
     }
 }

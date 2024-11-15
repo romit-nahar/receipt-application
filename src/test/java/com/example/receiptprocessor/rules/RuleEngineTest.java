@@ -43,6 +43,9 @@ class RuleEngineTest {
     void calculateRoundDollarPoints() {
         assertEquals(0, ruleEngine.calculateRoundDollarPoints(Double.valueOf(morningReceipt.getTotal())));
         assertEquals(50, ruleEngine.calculateRoundDollarPoints(Double.valueOf(simpleReceipt.getTotal())));
+
+        // No points awarded when total is zero
+        assertEquals(0, ruleEngine.calculateRoundDollarPoints(0.00));
     }
     
     @Test
@@ -50,6 +53,9 @@ class RuleEngineTest {
     void calculateQuarterMultiplePoints() {
         assertEquals(0, ruleEngine.calculateQuarterMultiplePoints(Double.valueOf(morningReceipt.getTotal())));
         assertEquals(25, ruleEngine.calculateQuarterMultiplePoints(Double.valueOf(simpleReceipt.getTotal())));
+
+        // No points awarded when total is zero
+        assertEquals(0, ruleEngine.calculateQuarterMultiplePoints(0.00));
     }
     
     @Test
