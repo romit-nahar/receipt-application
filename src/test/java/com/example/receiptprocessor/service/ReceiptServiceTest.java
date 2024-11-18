@@ -51,22 +51,11 @@ class ReceiptServiceTest {
         assertTrue(id.matches("[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}"));
     }
 
-    // TODO: Check for mock config in spring boot apps for RuleEngine
     @Test
     @DisplayName("Calculate points should sum all rule points for morning receipt")
     void testCalculatePoints() {
-        // Given
-        // TODO: Declare receipts map global using a config file
         String id = receiptService.processReceipt(morningReceipt);
-        // when(ruleEngine.calculateRetailerNamePoints(anyString())).thenReturn(9);
-        // when(ruleEngine.calculateRoundDollarPoints(anyDouble())).thenReturn(0);
-        // when(ruleEngine.calculateQuarterMultiplePoints(anyDouble())).thenReturn(0);
-        // when(ruleEngine.calculateItemPairPoints(anyList())).thenReturn(5);
-        // when(ruleEngine.calculateItemDescriptionPoints(any(Item.class))).thenReturn(0);
-        // when(ruleEngine.calculatePurchaseDatePoints(anyString())).thenReturn(6);
-        // when(ruleEngine.calculatePurchaseTimePoints(anyString())).thenReturn(10);
 
-        // When
         int points = receiptService.calculatePoints(id);
         int expectedPoints = 
             ruleEngine.calculateRetailerNamePoints(morningReceipt.getRetailer()) +
@@ -79,15 +68,7 @@ class ReceiptServiceTest {
             ruleEngine.calculatePurchaseDatePoints(morningReceipt.getPurchaseDate()) +
             ruleEngine.calculatePurchaseTimePoints(morningReceipt.getPurchaseTime());
         
-        // Then
         assertEquals(expectedPoints, points);
-    //     verify(ruleEngine).calculateRetailerNamePoints(morningReceipt.getRetailer());
-    //     verify(ruleEngine).calculateRoundDollarPoints(Double.valueOf(morningReceipt.getTotal()));
-    //     verify(ruleEngine).calculateQuarterMultiplePoints(Double.valueOf(morningReceipt.getTotal()));
-    //     verify(ruleEngine).calculateItemPairPoints(morningReceipt.getItems());
-    //     verify(ruleEngine, times(2)).calculateItemDescriptionPoints(any(Item.class));
-    //     verify(ruleEngine).calculatePurchaseDatePoints(morningReceipt.getPurchaseDate());
-    //     verify(ruleEngine).calculatePurchaseTimePoints(morningReceipt.getPurchaseTime());
     }
 
     @Test
