@@ -1,0 +1,109 @@
+Receipt Processor
+A Spring Boot application that processes receipts and calculates reward points based on various rules.
+
+Overview
+The Receipt Processor is a RESTful web service that analyzes receipt data and awards points based on specific rules. The application processes receipt information including retailer name, purchase date/time, items purchased, and total amount, then calculates reward points according to predefined criteria.
+
+Prerequisites
+
+1. Java 17 or higher
+Link: https://www.oracle.com/java/technologies/javase/jdk17-archive-downloads.html
+
+2. Gradle 7.x or higher
+Link: https://gradle.org/install/#older-releases
+
+3. Spring Boot 3.2.0
+Link: https://docs.spring.io/spring-boot/installing.html
+
+Building the Application
+To build the application, run:
+bash
+./gradlew clean build
+Running the Application
+To start the application, run:
+bash
+./gradlew bootRun
+The application will start on port 8080 by default.
+API Endpoints
+1. Process Receipt
+
+Endpoint: POST /receipts/process
+Description: Submits a receipt for processing
+Request Body Example:
+
+json{
+  "retailer": "Target",
+  "purchaseDate": "2024-01-01",
+  "purchaseTime": "13:01",
+  "items": [
+    {
+      "shortDescription": "Mountain Dew 12PK",
+      "price": "6.49"
+    }
+  ],
+  "total": "6.49"
+}
+
+Response: Returns a unique ID for the processed receipt
+
+json{
+  "id": "123e4567-e89b-12d3-a456-426614174000"
+}
+2. Get Points
+
+Endpoint: GET /receipts/{id}/points
+Description: Retrieves the points awarded for a specific receipt
+Response Example:
+
+json{
+  "points": 32
+}
+
+Points Calculation Rules
+
+Points are awarded based on the following rules:
+
+1. One point for every alphanumeric character in the retailer name
+2. 50 points if the total is a round dollar amount with no cents
+3. 25 points if the total is a multiple of 0.25
+4. 5 points for every two items on the receipt
+5. If the trimmed length of an item description is a multiple of 3, multiply the price by 0.2 and round up to get points
+6. 6 points if the day in the purchase date is odd
+7. 10 points if the time of purchase is after 2:00pm and before 4:00pm
+
+Technical Details
+
+Built with Spring Boot 3.2.0
+Uses in-memory storage (ConcurrentHashMap) for receipt data
+Implements a rule engine pattern for points calculation
+Includes comprehensive logging using SLF4J
+Uses Lombok for reducing boilerplate code
+Includes JaCoCo for code coverage reporting
+
+Project Structure
+com.example.receiptprocessor
+├── ReceiptProcessorApplication.java
+├── controller
+│   └── ReceiptController.java
+├── model
+│   ├── Item.java
+│   └── Receipt.java
+├── service
+│   └── ReceiptService.java
+└── rules
+    └── RuleEngine.java
+
+Testing
+The project includes JUnit 5 and Mockito for testing. To run tests:
+bash
+./gradlew test
+Code coverage reports can be found in build/reports/jacoco after running tests.
+
+Future Improvements
+
+1. Replace in-memory storage with a persistent database
+2. Add authentication and authorization
+3. Implement rate limiting
+4. Add API documentation using Swagger/OpenAPI
+5. Implement data validation and error handling improvements
+6. Add metrics and monitoring
