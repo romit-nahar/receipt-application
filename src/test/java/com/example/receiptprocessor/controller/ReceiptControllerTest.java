@@ -46,7 +46,7 @@ class ReceiptControllerTest {
 
     @Test
     @DisplayName("Process receipt should return generated ID")
-    void processReceipt() throws Exception {
+    void testProcessReceipt() throws Exception {
         // Given
         String mockId = "123e4567-e89b-12d3-a456-426614174000";
         when(receiptService.processReceipt(any(Receipt.class))).thenReturn(mockId);
@@ -61,7 +61,7 @@ class ReceiptControllerTest {
 
     @Test
     @DisplayName("Get points should return calculated points for valid ID")
-    void getPointsForValidId() throws Exception {
+    void testGetPointsForValidId() throws Exception {
         // Given
         String receiptId = "123e4567-e89b-12d3-a456-426614174000";
         int points = 100;
@@ -75,7 +75,7 @@ class ReceiptControllerTest {
 
     @Test
     @DisplayName("Get points with invalid ID should return 400 status and error message")
-    void getPointsWithInvalidId() throws Exception {
+    void testGetPointsWithInvalidId() throws Exception {
         // Given
         String invalidId = "invalid-id";
         when(receiptService.calculatePoints(invalidId)).thenThrow(new IllegalArgumentException("Receipt not found"));

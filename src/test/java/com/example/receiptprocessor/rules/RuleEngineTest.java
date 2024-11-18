@@ -1,9 +1,10 @@
 package com.example.receiptprocessor.rules;
 
+import static org.junit.jupiter.api.Assertions.*;
+
 import java.io.IOException;
 import java.io.InputStream;
 
-import static org.junit.jupiter.api.Assertions.assertEquals;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
@@ -33,14 +34,14 @@ class RuleEngineTest {
     
     @Test
     @DisplayName("Calculate retailer name points using morning receipt")
-    void calculateRetailerNamePoints() {
+    void testCalculateRetailerNamePoints() {
         assertEquals(9, ruleEngine.calculateRetailerNamePoints(morningReceipt.getRetailer()));
         assertEquals(6, ruleEngine.calculateRetailerNamePoints(simpleReceipt.getRetailer()));
     }
     
     @Test
     @DisplayName("Calculate round dollar points using morning receipt")
-    void calculateRoundDollarPoints() {
+    void testCalculateRoundDollarPoints() {
         assertEquals(0, ruleEngine.calculateRoundDollarPoints(Double.valueOf(morningReceipt.getTotal())));
         assertEquals(50, ruleEngine.calculateRoundDollarPoints(Double.valueOf(simpleReceipt.getTotal())));
 
@@ -50,7 +51,7 @@ class RuleEngineTest {
     
     @Test
     @DisplayName("Calculate quarter multiple points using morning receipt")
-    void calculateQuarterMultiplePoints() {
+    void testCalculateQuarterMultiplePoints() {
         assertEquals(0, ruleEngine.calculateQuarterMultiplePoints(Double.valueOf(morningReceipt.getTotal())));
         assertEquals(25, ruleEngine.calculateQuarterMultiplePoints(Double.valueOf(simpleReceipt.getTotal())));
 
@@ -60,7 +61,7 @@ class RuleEngineTest {
     
     @Test
     @DisplayName("Calculate item pair points using morning receipt")
-    void calculateItemPairPoints() {
+    void testCalculateItemPairPoints() {
         assertEquals(5, ruleEngine.calculateItemPairPoints(morningReceipt.getItems()));
         assertEquals(0, ruleEngine.calculateItemPairPoints(simpleReceipt.getItems()));
     }
@@ -79,32 +80,15 @@ class RuleEngineTest {
     
     @Test
     @DisplayName("Calculate purchase date points using morning receipt")
-    void calculatePurchaseDatePoints() {
+    void testCalculatePurchaseDatePoints() {
         assertEquals(0, ruleEngine.calculatePurchaseDatePoints(morningReceipt.getPurchaseDate()));
         assertEquals(6, ruleEngine.calculatePurchaseDatePoints(simpleReceipt.getPurchaseDate()));
     }
     
     @Test
     @DisplayName("Calculate purchase time points using morning receipt")
-    void calculatePurchaseTimePoints() {
+    void testCalculatePurchaseTimePoints() {
         assertEquals(0, ruleEngine.calculatePurchaseTimePoints(morningReceipt.getPurchaseTime()));
         assertEquals(10, ruleEngine.calculatePurchaseTimePoints(simpleReceipt.getPurchaseTime()));
-    }
-    
-    @Test
-    @DisplayName("Verify total points calculation for morning receipt")
-    void calculateTotalPoints() {
-        // Calculate expected total points for the morning receipt
-        int expectedPoints = 
-            ruleEngine.calculateRetailerNamePoints(morningReceipt.getRetailer()) +  // 9 points
-            ruleEngine.calculateRoundDollarPoints(Double.valueOf(morningReceipt.getTotal())) + // 0 points
-            ruleEngine.calculateQuarterMultiplePoints(Double.valueOf(morningReceipt.getTotal())) + // 0 points
-            ruleEngine.calculateItemPairPoints(morningReceipt.getItems()) + // 5 points
-            ruleEngine.calculatePurchaseDatePoints(morningReceipt.getPurchaseDate()) + // 0 points
-            ruleEngine.calculatePurchaseTimePoints(morningReceipt.getPurchaseTime()) + // 0 points
-            ruleEngine.calculateItemDescriptionPoints(morningReceipt.getItems().get(0)) + // 1 point
-            ruleEngine.calculateItemDescriptionPoints(morningReceipt.getItems().get(1));  // 0 points
-            
-        assertEquals(15, expectedPoints, "Morning receipt should earn total of 15 points");
     }
 }
