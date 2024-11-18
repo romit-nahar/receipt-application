@@ -23,6 +23,9 @@ public class ReceiptService {
     
     public String processReceipt(Receipt receipt) {
         String id = UUID.randomUUID().toString();
+        while(receipts.containsKey(id)) {
+            id = UUID.randomUUID().toString();
+        }
         receipts.put(id, receipt);
         // Using in memory storage for now. This can be migrated to DB whenever required.
         logger.info("Processed receipt with ID: {}", id);
