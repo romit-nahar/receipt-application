@@ -1,8 +1,8 @@
 {
     "retailer": "Target",
-    "purchaseDate": "2022-01-02",
-    "purchaseTime": "13:13",
-    "total": "1.25",
+    "purchaseDate": "2022-01-01",
+    "purchaseTime": "14:13",
+    "total": "1.00",
     "items": [
         {"shortDescription": "Pepsi - 12-oz", "price": "1.25"}
     ]

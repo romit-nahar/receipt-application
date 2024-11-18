@@ -3,12 +3,12 @@ package com.example.receiptprocessor.service;
 import java.util.Map;
 import java.util.UUID;
 import java.util.concurrent.ConcurrentHashMap;
-import java.util.concurrent.atomic.AtomicInteger;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
 
+import com.example.receiptprocessor.model.Item;
 import com.example.receiptprocessor.model.Receipt;
 import com.example.receiptprocessor.rules.RuleEngine;
 
@@ -24,6 +24,7 @@ public class ReceiptService {
     public String processReceipt(Receipt receipt) {
         String id = UUID.randomUUID().toString();
         receipts.put(id, receipt);
+        // Using in memory storage for now. This can be migrated to DB whenever required.
         logger.info("Processed receipt with ID: {}", id);
         return id;
     }
@@ -38,24 +39,25 @@ public class ReceiptService {
         logger.info("Calculating points for receipt ID: {}", id);
         int totalPoints = 0;
         Double total = Double.valueOf(receipt.getTotal());
-        
-        // Apply each rule and sum up points
-        totalPoints += ruleEngine.calculateRetailerNamePoints(receipt.getRetailer());
-        // No points earned based on total if zero
-        if (total > 0) {
-            totalPoints += ruleEngine.calculateRoundDollarPoints(total);
-            totalPoints += ruleEngine.calculateQuarterMultiplePoints(total);
-        }
-        
-        totalPoints += ruleEngine.calculateItemPairPoints(receipt.getItems());
-        
-        // Calculate points for each item description
-        AtomicInteger itemPoints = new AtomicInteger(0);
-        receipt.getItems().forEach(item -> 
-            itemPoints.addAndGet(ruleEngine.calculateItemDescriptionPoints(item)));
-        totalPoints += itemPoints.get();
 
+        // Apply each rule and sum up points
+        // Rule 1
+        totalPoints += ruleEngine.calculateRetailerNamePoints(receipt.getRetailer());
+        // Rule 2
+        totalPoints += ruleEngine.calculateRoundDollarPoints(total);
+        // Rule 3
+        totalPoints += ruleEngine.calculateQuarterMultiplePoints(total);
+        // Rule 4
+        totalPoints += ruleEngine.calculateItemPairPoints(receipt.getItems());
+        // Rule 5
+        // We can use an AtomicInteger here to make it thread safe while scaling the app
+        for (Item item : receipt.getItems()) {
+            totalPoints += ruleEngine.calculateItemDescriptionPoints(item);
+        }
+
+        // Rule 6
         totalPoints += ruleEngine.calculatePurchaseDatePoints(receipt.getPurchaseDate());
+        // Rule 7
         totalPoints += ruleEngine.calculatePurchaseTimePoints(receipt.getPurchaseTime());
         
         logger.info("Total points calculated for receipt {}: {}", id, totalPoints);
