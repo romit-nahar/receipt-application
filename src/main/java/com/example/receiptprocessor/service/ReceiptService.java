@@ -19,13 +19,15 @@ import lombok.RequiredArgsConstructor;
 public class ReceiptService {
     private static final Logger logger = LoggerFactory.getLogger(ReceiptService.class);
     private final RuleEngine ruleEngine;
+
     private final Map<String, Receipt> receipts = new ConcurrentHashMap<>();
     
     public String processReceipt(Receipt receipt) {
-        String id = UUID.randomUUID().toString();
-        while(receipts.containsKey(id)) {
+        String id;
+        do {
             id = UUID.randomUUID().toString();
-        }
+        } while (receipts.containsKey(id));
+
         receipts.put(id, receipt);
         // Using in memory storage for now. This can be migrated to DB whenever required.
         logger.info("Processed receipt with ID: {}", id);
